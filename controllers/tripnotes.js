@@ -90,17 +90,28 @@ export const getTripnote = async (req, res) => {
 
 export const addItineraryItem = async (req, res) => {
   try {
-    const result = await attractions.findById(req.body.attraction)
-    if (!result) {
+    const sreachAttraction = await attractions.findById(req.body.attraction)
+    if (!sreachAttraction) {
       return res.status(404).send({ success: false, message: '景點不存在' })
     }
-    req.body.item.push({ attraction: req.body.attraction })
+    const result = await tripnotes.findById(req.body._id)
+    if (result) {
+      console.log(result)
+      result.item.push({
+        attraction: req.body.attraction,
+        spend: req.body.spend
+      })
+    }
+    await result.save()
+
+    res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     if (error.name === 'ValidationError') {
       const key = Object.keys(error.errors)[0]
       const message = error.errors[key].message
       return res.status(400).send({ success: false, message })
     } else {
+      console.log(error)
       res.status(500).send({ success: false, message: '伺服器錯誤' })
     }
   }
