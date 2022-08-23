@@ -81,7 +81,7 @@ export const getAllTripnotes = async (req, res) => {
 
 export const getTripnote = async (req, res) => {
   try {
-    const result = await tripnotes.findById(req.params.id).populate('user', 'account')
+    const result = await tripnotes.findById(req.params.id).populate('user', 'account').populate('item.attraction')
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     res.status(500).send({ success: false, message: '伺服器錯誤' })
