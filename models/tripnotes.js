@@ -46,6 +46,10 @@ const schema = new mongoose.Schema({
         spend: {
           type: Number,
           default: 0
+        },
+        list: {
+          type: Number,
+          default: 0
         }
       }
     ]

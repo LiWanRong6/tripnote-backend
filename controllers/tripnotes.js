@@ -4,7 +4,6 @@ import attractions from '../models/attractions.js'
 // 建立行程表
 export const createTripnote = async (req, res) => {
   try {
-    console.log('body', req.body)
     const result = await tripnotes.create({
       user: req.user._id,
       title: req.body.title,
@@ -35,6 +34,20 @@ export const deleteTripnote = async (req, res) => {
   try {
     await tripnotes.findByIdAndDelete(req.params.id)
     res.status(200).send({ success: true, message: '' })
+  } catch (error) {
+    res.status(500).send({ success: false, message: '伺服器錯誤' })
+  }
+}
+
+// 是否分享
+export const postTripnote = async (req, res) => {
+  try {
+    const result = await tripnotes.findById(req.body._id)
+    if (result) {
+      result.ispost = req.body.ispost
+    }
+    await result.save()
+    res.status(200).send({ success: true, message: '', result })
   } catch (error) {
     res.status(500).send({ success: false, message: '伺服器錯誤' })
   }
@@ -88,6 +101,7 @@ export const getTripnote = async (req, res) => {
   }
 }
 
+// 新增項目
 export const addItineraryItem = async (req, res) => {
   try {
     const sreachAttraction = await attractions.findById(req.body.attraction)
@@ -96,10 +110,10 @@ export const addItineraryItem = async (req, res) => {
     }
     const result = await tripnotes.findById(req.body._id)
     if (result) {
-      console.log(result)
       result.item.push({
         attraction: req.body.attraction,
-        spend: req.body.spend
+        spend: req.body.spend,
+        list: req.body.list
       })
     }
     await result.save()
@@ -111,8 +125,29 @@ export const addItineraryItem = async (req, res) => {
       const message = error.errors[key].message
       return res.status(400).send({ success: false, message })
     } else {
-      console.log(error)
       res.status(500).send({ success: false, message: '伺服器錯誤' })
     }
+  }
+}
+
+export const editItineraryItem = async (req, res) => {
+  try {
+    const data = {
+      user: req.user._id,
+      title: req.body.title,
+      item: req.body.item,
+      ispost: req.body.ispost,
+      date: {
+        departure: req.body.departure,
+        return: req.body.return,
+        created: req.body.created,
+        post: req.body.post
+      }
+    }
+    if (req.file) data.image = req.file.path
+    const result = await tripnotes.findByIdAndUpdate(req.body._id, data, { new: true })
+    res.status(200).send({ success: true, message: '', result })
+  } catch (error) {
+    res.status(500).send({ success: false, message: '伺服器錯誤' })
   }
 }
