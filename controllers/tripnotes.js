@@ -1,7 +1,7 @@
 import tripnotes from '../models/tripnotes.js'
 import attractions from '../models/attractions.js'
 
-// 建立行程表
+// 建立、編輯、刪除行程表
 export const createTripnote = async (req, res) => {
   try {
     const result = await tripnotes.create({
@@ -28,8 +28,6 @@ export const createTripnote = async (req, res) => {
     }
   }
 }
-
-// 刪除行程表
 export const deleteTripnote = async (req, res) => {
   try {
     await tripnotes.findByIdAndDelete(req.params.id)
@@ -101,7 +99,7 @@ export const getTripnote = async (req, res) => {
   }
 }
 
-// 新增項目
+// 新增、編輯項目
 export const addItineraryItem = async (req, res) => {
   try {
     const sreachAttraction = await attractions.findById(req.body.attraction)
@@ -113,7 +111,8 @@ export const addItineraryItem = async (req, res) => {
       result.item.push({
         attraction: req.body.attraction,
         spend: req.body.spend,
-        list: req.body.list
+        list: req.body.list,
+        content: req.body.content
       })
     }
     await result.save()
@@ -129,7 +128,6 @@ export const addItineraryItem = async (req, res) => {
     }
   }
 }
-
 export const editItineraryItem = async (req, res) => {
   try {
     const data = {
@@ -148,6 +146,13 @@ export const editItineraryItem = async (req, res) => {
     const result = await tripnotes.findByIdAndUpdate(req.body._id, data, { new: true })
     res.status(200).send({ success: true, message: '', result })
   } catch (error) {
-    res.status(500).send({ success: false, message: '伺服器錯誤' })
+    console.log(error)
+    if (error.name === 'ValidationError') {
+      const key = Object.keys(error.errors)[0]
+      const message = error.errors[key].message
+      return res.status(400).send({ success: false, message })
+    } else {
+      res.status(500).send({ success: false, message: '伺服器錯誤' })
+    }
   }
 }

@@ -43,6 +43,9 @@ const schema = new mongoose.Schema({
           ref: 'attractions',
           required: [true, '缺少景點欄位']
         },
+        content: {
+          type: String
+        },
         spend: {
           type: Number,
           default: 0

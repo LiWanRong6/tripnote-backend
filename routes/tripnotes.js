@@ -19,8 +19,8 @@ const router = express.Router()
 
 // 新增、修改、刪除
 router.post('/', content('multipart/form-data'), auth.jwt, upload, createTripnote)
-router.patch('/post/:id', auth.jwt, postTripnote)
 router.delete('/:id', auth.jwt, deleteTripnote)
+router.patch('/post/:id', auth.jwt, postTripnote)
 
 // 搜尋
 router.get('/', auth.jwt, getMyTripnotes)
