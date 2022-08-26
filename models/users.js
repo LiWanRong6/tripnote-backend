@@ -27,9 +27,6 @@ const schema = new mongoose.Schema({
   avatar: {
     type: String
   },
-  introduction: {
-    type: String
-  },
   tokens: {
     type: [String]
   },

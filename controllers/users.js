@@ -48,7 +48,6 @@ export const login = async (req, res) => {
         account: req.user.account,
         email: req.user.email,
         avatar: req.user.avatar,
-        introduction: req.user.introduction,
         role: req.user.role
       }
     })
@@ -91,7 +90,6 @@ export const getUser = (req, res) => {
         account: req.user.account,
         email: req.user.email,
         avatar: req.user.avatar,
-        introduction: req.user.introduction,
         role: req.user.role
       }
     })
@@ -119,19 +117,3 @@ export const deleteUser = async (req, res) => {
     res.status(500).send({ success: false, message: '伺服器錯誤' })
   }
 }
-
-// 編輯
-// export const editUser = async (req, res) => {
-//   try {
-//     const data = {
-//       account: req.user.account,
-//       email: req.body.email,
-//       avatar: req.user.avatar,
-//       introduction: req.body.introduction
-//     }
-//     const result = await users.findByIdAndUpdate(req.params.id, data, { new: true })
-//     res.status(200).send({ success: true, message: '', result })
-//   } catch (error) {
-//     res.status(500).send({ success: false, message: '伺服器錯誤' })
-//   }
-// }
